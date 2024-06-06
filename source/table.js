@@ -4,7 +4,7 @@ import { Vector } from "vector";
 
 export class Table {
   constructor(events, canvas, players = 2, decks = 1, piles = 1) {
-    this.deck = new Deck("images/deck.png", decks);
+    this.deck = new Deck("/images/deck.png", decks);
     this.screenwidth = canvas.width;
     this.screenheight = canvas.height;
 
