@@ -163,8 +163,9 @@ export class Card {
 }
 
 const MAXANGLE = 0.03;
-export class Pile {
-  constructor(cards, position) {
+export class Pile extends EventTarget {
+  constructor(cards, position, events) {
+    super();
     this.cards = cards.map(card => {
       return {
         card,
@@ -173,6 +174,35 @@ export class Pile {
       }
     });
     this.position = position;
+    events.on("mouse-down", this.handlemousedown);
+    events.on("mouse-up", this.handlemouseup);
+  }
+
+  get x() {
+    return this.position.x;
+  }
+  get y() {
+    return this.position.y;
+  }
+  get w() {
+    return Sprite.width;
+  }
+  get h() {
+    return Sprite.height;
+  }
+
+  handlemousedown = (e) => {
+    if (isPointInRectangle(e.target.position, this))
+    {
+      this.pressed = true;
+    }
+  }
+  handlemouseup = (e) => {
+    if (this.pressed)
+    {
+      this.dispatchEvent(new Event("click"));
+    }
+    this.pressed = false;
   }
 
   remove() {
@@ -209,13 +239,15 @@ export class Pile {
   }
 }
 
-export class Deck {
-  constructor(image, amount = 1) {
+export class Deck extends EventTarget {
+  constructor(image, events, amount = 1) {
+    super();
     this.imagesrc = image;
     this.amount = amount;
     this.available = [];
     this.cards = [];
-    this.pile = new Pile([], Vector.Zero);
+    this.pile = new Pile([], Vector.Zero, events);
+    // this.pile.addEventListener("click", this.handlepileclick)
   }
   async load () {
     await Sprite.initialize(this.imagesrc, 5, 13);
@@ -239,6 +271,10 @@ export class Deck {
   get height() {
     return Sprite.height;
   }
+
+  // handlepileclick = (e) => {
+  //   this.dispatchEvent(new Event("click"))
+  // }
 
   /**
    * not render function but "draw a card" function

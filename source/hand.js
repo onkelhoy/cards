@@ -82,13 +82,7 @@ export class Hand extends EventTarget {
             const index = this.cards.findIndex(c => c.index === info.card.index);
             if (index !== -1)
             {
-              console.log('insert', index + 1)
               this.cards.splice(index + 1, 0, this.selected.card);
-              console.log(this.cards);
-            }
-            else 
-            {
-              console.log('could not find index', index);
             }
           }
           else
@@ -98,14 +92,10 @@ export class Hand extends EventTarget {
             const index = this.cards.findIndex(c => c.index === info.card.index);
             if (index !== -1)
             {
-              console.log('insert', index)
               this.cards.splice(index, 0, this.selected.card);
             }
-            else 
-            {
-              console.log('could not find index', index);
-            }
           }
+          this.highlight = [];
           this.setDeckPosition();
         }
         else
@@ -263,16 +253,16 @@ export class Hand extends EventTarget {
     }
     
     let space = cardwidth + 15; 
-    if (space * this.cards.length > (this.screenwidth - Sprite.width))
+    if (space * (this.cards.length - 1) > (this.screenwidth - Sprite.width))
     {
-      space = (this.screenwidth - Sprite.width) / this.cards.length;
+      space = (this.screenwidth - Sprite.width) / (this.cards.length - 1);
     }
-    let start = Math.max(0, this.screenwidth/2 - (space * this.cards.length / 2) - Sprite.width/2 - 15)
+    let start = Math.max(0, this.screenwidth/2 - (space * (this.cards.length - 1) / 2) - Sprite.width/2 - 15)
 
     this.cards.forEach((card, i) => {
       // console.log(card, this.cards);
       let x = start + i * space;
-      let y = this.screenheight - Sprite.height;
+      let y = this.screenheight - Sprite.height + 40;
 
       // // hightlight index [0, 1] - (left, right)
       // const hi = this.highlight.findIndex(v => v === i);

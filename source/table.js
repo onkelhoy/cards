@@ -5,7 +5,7 @@ import { Button, EyeButton } from "button";
 
 export class Table {
   constructor(events, canvas, players = 2, decks = 1, piles = 1, online = false) {
-    this.deck = new Deck("/images/spritesheet.png", decks);
+    this.deck = new Deck("/images/spritesheet.png", events, decks);
     this.buttons = [new Button(canvas, events)];
     this.screenwidth = canvas.width;
     this.screenheight = canvas.height;
@@ -16,6 +16,10 @@ export class Table {
       for (let i=0; i<players; i++)
       {
         this.players.push(new Hand(events, i, canvas));
+        if (!online) 
+        {
+          this.players[i].show = false;
+        }
       }
     }
     else 
@@ -23,6 +27,10 @@ export class Table {
       for (let id of players)
       {
         this.players.push(new Hand(events, id, canvas));
+        if (!online) 
+        {
+          this.players[this.players.length - 1].show = false;
+        }
       }
     }
 
@@ -31,7 +39,9 @@ export class Table {
 
     for (let i=0; i<piles; i++)
     {
-      this.piles.push(new Pile([], Vector.Zero));
+      const pile = new Pile([], Vector.Zero, events);
+      pile.addEventListener("click", this.handlepileclick);
+      this.piles.push(pile);
     }
 
     this.turn = 0;
@@ -42,6 +52,7 @@ export class Table {
     }
 
     this.buttons[0].addEventListener("click", this.handlenext);
+    this.online = online;
   }
 
   async initialize() {
@@ -69,51 +80,53 @@ export class Table {
     this.deal(0);
     this.deal(0);
     this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
-    // this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+    this.deal(0);
+
+    this.deal(1);
+    this.deal(1);
+    this.deal(1);
+    this.deal(1);
+    this.deal(1);
+    this.deal(1);
+    this.deal(1);
   }
 
   deal(playerid) {
@@ -170,6 +183,13 @@ export class Table {
   }
   handlereveal = (e) => {
     this.players[this.turn%this.players.length].show = e.target.open;
+  }
+  handlepileclick = (e) => {
+    this.dispatchEvent(new CustomEvent("pile-click", { detail: { pile: e.target } }));
+  }
+
+  handledeckclick = (e) => {
+    this.dispatchEvent(new CustomEvent("deck-click", { detail: { deck: e.target } }));
   }
 
   shuffle() {
