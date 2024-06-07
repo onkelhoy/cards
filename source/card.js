@@ -6,6 +6,7 @@
 
 import { LoadImage } from "engine";
 import { Vector } from "vector";
+import { isPointInRectangle } from "collision";
 
 /**
  * @class 
@@ -247,7 +248,7 @@ export class Deck extends EventTarget {
     this.available = [];
     this.cards = [];
     this.pile = new Pile([], Vector.Zero, events);
-    // this.pile.addEventListener("click", this.handlepileclick)
+    this.pile.addEventListener("click", this.handlepileclick)
   }
   async load () {
     await Sprite.initialize(this.imagesrc, 5, 13);
@@ -272,9 +273,9 @@ export class Deck extends EventTarget {
     return Sprite.height;
   }
 
-  // handlepileclick = (e) => {
-  //   this.dispatchEvent(new Event("click"))
-  // }
+  handlepileclick = (e) => {
+    this.dispatchEvent(new Event("click"))
+  }
 
   /**
    * not render function but "draw a card" function

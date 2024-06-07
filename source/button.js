@@ -17,7 +17,7 @@ export class Button extends EventTarget {
     this.w = Sprite.width;
     const space = this.w + 20;
 
-    this.x = this.x - this.w/2 - (space * total / 2) + index * space;
+    this.x = this.x - this.w/2 - (space * (total-1) / 2) + (index) * space;
     this.y -= this.h/2;
   }
 

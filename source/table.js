@@ -3,9 +3,12 @@ import { Hand } from "hand";
 import { Vector } from "vector";
 import { Button, EyeButton } from "button";
 
-export class Table {
+export class Table extends EventTarget {
   constructor(events, canvas, players = 2, decks = 1, piles = 1, online = false) {
+    super();
+    
     this.deck = new Deck("/images/spritesheet.png", events, decks);
+    this.deck.addEventListener("click", this.handledeckclick);
     this.buttons = [new Button(canvas, events)];
     this.screenwidth = canvas.width;
     this.screenheight = canvas.height;
@@ -185,10 +188,12 @@ export class Table {
     this.players[this.turn%this.players.length].show = e.target.open;
   }
   handlepileclick = (e) => {
+    console.log('pile-click');
     this.dispatchEvent(new CustomEvent("pile-click", { detail: { pile: e.target } }));
   }
 
   handledeckclick = (e) => {
+    console.log('deck-click');
     this.dispatchEvent(new CustomEvent("deck-click", { detail: { deck: e.target } }));
   }
 
