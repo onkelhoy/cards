@@ -1,10 +1,12 @@
 import { Deck, Pile, Sprite } from "card";
 import { Hand } from "hand";
 import { Vector } from "vector";
+import { Button, EyeButton } from "button";
 
 export class Table {
-  constructor(events, canvas, players = 2, decks = 1, piles = 1) {
-    this.deck = new Deck("/images/deck.png", decks);
+  constructor(events, canvas, players = 2, decks = 1, piles = 1, online = false) {
+    this.deck = new Deck("/images/spritesheet.png", decks);
+    this.buttons = [new Button(canvas, events)];
     this.screenwidth = canvas.width;
     this.screenheight = canvas.height;
 
@@ -32,19 +34,26 @@ export class Table {
       this.piles.push(new Pile([], Vector.Zero));
     }
 
-    this.turn = this.players[0]?.id;
+    this.turn = 0;
+    if (!online) 
+    {
+      this.buttons.push(new EyeButton(canvas, events));
+      this.buttons[1].addEventListener("click", this.handlereveal);
+    }
+
+    this.buttons[0].addEventListener("click", this.handlenext);
   }
 
   async initialize() {
     await this.deck.load();
     this.shuffle();
 
-    let space = Sprite.width + 25; 
-    if (space * (this.piles.length + 1) > this.screenwidth)
+    let space = Sprite.width + 50; 
+    if (space * (this.piles.length) > this.screenwidth)
     {
-      space = this.screenwidth / (this.piles.length + 1);
+      space = this.screenwidth / (this.piles.length);
     }
-    let start = Math.max(0, this.screenwidth/2 - (space * (this.piles.length + 1) / 2))
+    let start = Math.max(0, this.screenwidth/2 - (space * (this.piles.length) / 2) - 50)
     let y = this.screenheight / 2 - Sprite.height / 2;
     this.deck.pile.position.set(start, y);
 
@@ -53,55 +62,58 @@ export class Table {
       p.position.set(x, y);
     });
 
+    this.buttons[0].initialize(this.buttons.length, 0);
+    if (this.buttons[1]) this.buttons[1].initialize(this.buttons.length, 1);
+
     this.deal(0);
     this.deal(0);
     this.deal(0);
     this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
+    // this.deal(0);
   }
 
   deal(playerid) {
@@ -148,6 +160,17 @@ export class Table {
     closestpile.add(card);
     // card.animate(closestpile.position);
   }
+  handlenext = (e) => {
+    this.turn++;
+    if (this.buttons.length > 1)
+    {
+      this.players[this.turn%this.players.length].show = false;
+      this.buttons[1].open = false;
+    }
+  }
+  handlereveal = (e) => {
+    this.players[this.turn%this.players.length].show = e.target.open;
+  }
 
   shuffle() {
     this.deck.shuffle();
@@ -160,8 +183,10 @@ export class Table {
     this.piles.forEach(pile => pile.render(context));
 
     this.players.forEach(player => {
-      player.turn = player.id === this.turn;
+      player.turn = player.id === this.players[this.turn%this.players.length].id;
       player.render(context);
     });
+
+    this.buttons.forEach(button => button.render(context));
   }
 }

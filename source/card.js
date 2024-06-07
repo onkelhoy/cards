@@ -56,6 +56,30 @@ export class Sprite {
     // Enable image smoothing
     context.imageSmoothingEnabled = true;
   }
+
+  static renderButton(context, index = 0, x, y, pressed = false) {
+    const i = 13 * 4 + 1 + index;
+    const framex = i % Sprite.cols;
+    const framey = Math.floor(i / Sprite.cols);
+
+    // Disable image smoothing
+    context.imageSmoothingEnabled = false;
+
+    context.drawImage(
+      Sprite.image, 
+      framex*Sprite.framewidth, 
+      framey*Sprite.frameheight + (pressed ? 11 : 0), 
+      Sprite.framewidth, 
+      11, 
+      x, 
+      y, 
+      Sprite.width, 
+      11*6,
+    );
+
+    // Enable image smoothing
+    context.imageSmoothingEnabled = true;
+  }
 }
 
 /**
@@ -126,8 +150,15 @@ export class Card {
     return new Card("back");
   }
 
-  render(context) {
-    Sprite.draw(context, this.index, this.position.x, this.position.y);
+  render(context, backside = false) {
+    if (backside)
+    {
+      Sprite.draw(context, 52, this.position.x, this.position.y);
+    }
+    else 
+    {
+      Sprite.draw(context, this.index, this.position.x, this.position.y);
+    }
   }
 }
 

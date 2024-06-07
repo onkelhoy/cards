@@ -15,6 +15,7 @@ export class Hand extends EventTarget {
     this.turn = false;
     this.screenwidth = canvas.width;
     this.screenheight = canvas.height;
+    this.show = true;
 
     events.on('mouse-down', this.handlemousedown);
     events.on('mouse-up', this.handlemouseup);
@@ -30,7 +31,7 @@ export class Hand extends EventTarget {
     if (!this.turn) return;
     this.clickstart = e.target.position.copy();
     
-    for (let i=this.cards.length-1; i>=0; i--) {
+    for (let i=0; i<this.cards.length; i++) {
       const card = this.cards[i];
       if (isPointInRectangle(e.target.position, card.rectangle))
       {
@@ -40,6 +41,7 @@ export class Hand extends EventTarget {
           card,
           offset: e.target.position.Sub(card.position),
           original,
+          index: i,
         };
         break;
       }
@@ -58,31 +60,68 @@ export class Hand extends EventTarget {
       this.maybeselect = null;
     }
 
-    if (this.highlight.length > 0)
-    {
-      this.highlight.forEach(highlight => {
-        highlight.card.position.set(highlight.original);
-      });
-      this.highlight = [];
-    }
-
     if (this.selected)
     {
+      // always happends 
+      this.cards.splice(this.selected.index, 1);
+
       if (this.selected.card.position.y < (this.screenheight - 200))
       {
-        console.log('drop-zone')
-        const index =  this.cards.findIndex(c => c.index === this.selected.card.index);
-        this.cards.splice(index, 1);
         this.dispatchEvent(new CustomEvent('drop', { detail: { card: this.selected.card }}));
         this.setDeckPosition();
       }
       else 
       {
         // move back 
-        console.log('move back');
-        this.selected.card.position.set(this.selected.original);
+        if (this.highlight[0])
+        {
+          if (this.highlight[0].type === "left")
+          {
+            // add card to right of the "left" card
+            const info = this.highlight[0];
+            const index = this.cards.findIndex(c => c.index === info.card.index);
+            if (index !== -1)
+            {
+              console.log('insert', index + 1)
+              this.cards.splice(index + 1, 0, this.selected.card);
+              console.log(this.cards);
+            }
+            else 
+            {
+              console.log('could not find index', index);
+            }
+          }
+          else
+          {
+            // add card to left of the "right" card
+            const info = this.highlight[0];
+            const index = this.cards.findIndex(c => c.index === info.card.index);
+            if (index !== -1)
+            {
+              console.log('insert', index)
+              this.cards.splice(index, 0, this.selected.card);
+            }
+            else 
+            {
+              console.log('could not find index', index);
+            }
+          }
+          this.setDeckPosition();
+        }
+        else
+        {
+          this.selected.card.position.set(this.selected.original);
+        }
       }
       this.selected = null;
+    }
+
+    if (this.highlight.length > 0)
+    {
+      this.highlight.forEach(highlight => {
+        highlight.card.position.set(highlight.original);
+      });
+      this.highlight = [];
     }
   }
   /** deals with move event - idealy when moving a card
@@ -117,30 +156,35 @@ export class Hand extends EventTarget {
           card: null,
           distance: Number.MAX_SAFE_INTEGER
         }
-        for (let card of this.cards) {
+        for (let i=0; i<this.cards.length; i++) {
+          const card = this.cards[i];
+          if (card.index === this.selected?.card?.index) continue;
+
           const rightdistance = card.position.x - e.target.position.x; 
           if (rightdistance > 0 && rightdistance < closestright.distance)
           {
             closestright.distance = rightdistance;
             closestright.card = card;
+            closestright.index = i;
           } 
           const leftdistance = e.target.position.x - card.position.x
           if (leftdistance > 0 && leftdistance < closestleft.distance)
           {
             closestleft.distance = leftdistance;
             closestleft.card = card;
+            closestleft.index = i;
           }
         }
 
         if (closestleft.card)
         {
-          this.highlight.push({card: closestleft.card, original: closestleft.card.position.copy()})
+          this.highlight.push({type: "left", index: closestleft.index, card: closestleft.card, original: closestleft.card.position.copy()})
           closestleft.card.position.y -= 15;
           closestleft.card.position.x = this.selected.card.position.x - Sprite.width - 15;
         }
         if (closestright.card)
         {
-          this.highlight.push({card: closestright.card, original: closestright.card.position.copy()})
+          this.highlight.push({type: "right", index: closestright.index, card: closestright.card, original: closestright.card.position.copy()})
           closestright.card.position.y -= 15;
           closestright.card.position.x = this.selected.card.position.x + Sprite.width + 15;
         }
@@ -163,7 +207,7 @@ export class Hand extends EventTarget {
     }
     else 
     {
-      for (let i=this.cards.length-1; i>=0; i--) {
+      for (let i=0; i<this.cards.length; i++) {
         const card = this.cards[i];
         if (card.index === this.maybeselect.card.index) 
         {
@@ -189,6 +233,7 @@ export class Hand extends EventTarget {
             card,
             offset: e.target.position.Sub(card.position), 
             original,
+            index: i,
           };
           break;
         }
@@ -197,7 +242,7 @@ export class Hand extends EventTarget {
   }
 
   add(card) {
-    this.cards.push(card);
+    this.cards.unshift(card);
     this.setDeckPosition();
   }
 
@@ -222,12 +267,12 @@ export class Hand extends EventTarget {
     {
       space = (this.screenwidth - Sprite.width) / this.cards.length;
     }
-    let start = Math.max(0, this.screenwidth/2 - (space * this.cards.length / 2) - Sprite.width/2)
+    let start = Math.max(0, this.screenwidth/2 - (space * this.cards.length / 2) - Sprite.width/2 - 15)
 
     this.cards.forEach((card, i) => {
       // console.log(card, this.cards);
       let x = start + i * space;
-      let y = this.screenheight - 130;
+      let y = this.screenheight - Sprite.height;
 
       // // hightlight index [0, 1] - (left, right)
       // const hi = this.highlight.findIndex(v => v === i);
@@ -248,16 +293,16 @@ export class Hand extends EventTarget {
     if (!this.turn) return;
     if (this.cards.length === 0 && !this.selected) return;
 
-    this.cards.forEach(card => card.render(context));
+    this.cards.forEach(card => card.render(context, !this.show));
     if (this.selected)
     {
-      this.selected.card.render(context);
+      this.selected.card.render(context, !this.show);
     }
     if (this.maybeselect) // double render but its okay
     {
-      this.maybeselect.card.render(context);
+      this.maybeselect.card.render(context, !this.show);
     }
 
-    this.highlight.forEach(h => h.card.render(context)); // also double render
+    this.highlight.forEach(h => h.card.render(context, !this.show)); // also double render
   }
 }
