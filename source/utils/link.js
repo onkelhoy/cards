@@ -3,7 +3,7 @@ export function getlink(url) {
   {
     if (window.location.hostname.endsWith('github.io'))
     {
-      return window.location.pathname.split("/")[1] + url;
+      return "/" + window.location.pathname.split("/")[1] + url;
     }
   }
 
