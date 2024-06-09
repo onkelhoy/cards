@@ -2,6 +2,7 @@ import { Deck, Pile, Sprite } from "card";
 import { Hand } from "hand";
 import { Vector } from "vector";
 import { Button, EyeButton } from "button";
+import { getlink } from "link";
 
 export class Table extends EventTarget {
   constructor(events, canvas, players = 2, decks = 1, piles = 1, online = false) {
