@@ -6,8 +6,8 @@ export class Button extends EventTarget {
     super();
     this.h = 11*6;
     this.pressed = false;
-    this.x = canvas.width/2;
-    this.y = canvas.height/6;
+    this.x = canvas.width;
+    this.y = 20;
 
     events.on('mouse-down', this.handlemousedown);
     events.on('mouse-up', this.handlemouseup);
@@ -17,8 +17,8 @@ export class Button extends EventTarget {
     this.w = Sprite.width;
     const space = this.w + 20;
 
-    this.x = this.x - this.w/2 - (space * (total-1) / 2) + (index) * space;
-    this.y -= this.h/2;
+    this.x = this.x - this.w - space * (total-1) + index * space - 20;
+    // this.y -= this.h/2;
   }
 
   // events handlers 

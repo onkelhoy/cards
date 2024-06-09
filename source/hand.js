@@ -36,13 +36,14 @@ export class Hand extends EventTarget {
       if (isPointInRectangle(e.target.position, card.rectangle))
       {
         const original = card.position.copy()
-        card.position.y -= 10;
+        card.position.y -= 100;
         this.maybeselect = {
           card,
           offset: e.target.position.Sub(card.position),
           original,
           index: i,
         };
+        // this.maybeselect.card.position.y -= 100;
         break;
       }
     };
@@ -125,7 +126,7 @@ export class Hand extends EventTarget {
     if (this.selected)
     {
       this.selected.card.position.set(e.target.position.Sub(this.selected.offset));
-      const dpos = this.selected.original.Sub(this.selected.card.position);
+      const dpos = this.selected.original.Sub(this.selected.card.position.x, this.selected.card.position.y + 100);
 
       if (this.highlight.length > 0)
       {
@@ -169,13 +170,13 @@ export class Hand extends EventTarget {
         if (closestleft.card)
         {
           this.highlight.push({type: "left", index: closestleft.index, card: closestleft.card, original: closestleft.card.position.copy()})
-          closestleft.card.position.y -= 15;
+          closestleft.card.position.y -= 85;
           closestleft.card.position.x = this.selected.card.position.x - Sprite.width - 15;
         }
         if (closestright.card)
         {
           this.highlight.push({type: "right", index: closestright.index, card: closestright.card, original: closestright.card.position.copy()})
-          closestright.card.position.y -= 15;
+          closestright.card.position.y -= 85;
           closestright.card.position.x = this.selected.card.position.x + Sprite.width + 15;
         }
       }
@@ -185,7 +186,7 @@ export class Hand extends EventTarget {
     if (!this.maybeselect) return; 
     
     this.maybeselect.card.position.set(e.target.position.Sub(this.maybeselect.offset));
-    const dpos = this.maybeselect.original.Sub(this.maybeselect.card.position);
+    const dpos = this.maybeselect.original.Sub(this.maybeselect.card.position.x, this.maybeselect.card.position.y + 100);
 
     if (dpos.y > 40)
     {
@@ -218,13 +219,14 @@ export class Hand extends EventTarget {
           this.maybeselect.card.position.set(this.maybeselect.original);
 
           const original = card.position.copy()
-          card.position.y -= 10;
+          card.position.y -= 100;
           this.maybeselect = {
             card,
             offset: e.target.position.Sub(card.position), 
             original,
             index: i,
           };
+          // this.maybeselect.card.position.y -= 100;
           break;
         }
       }

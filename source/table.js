@@ -7,7 +7,7 @@ export class Table extends EventTarget {
   constructor(events, canvas, players = 2, decks = 1, piles = 1, online = false) {
     super();
     
-    this.deck = new Deck("/images/spritesheet.png", events, decks);
+    this.deck = new Deck(getlink("/assets/images/spritesheet.png"), events, decks);
     this.deck.addEventListener("click", this.handledeckclick);
     this.buttons = [new Button(canvas, events)];
     this.screenwidth = canvas.width;
