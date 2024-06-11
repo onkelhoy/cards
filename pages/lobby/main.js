@@ -18,7 +18,7 @@ window.onload = () => {
   document.querySelector('input[name="display-name"]').addEventListener('input', handledisplaynamechange);
 
   const gametype = window.sessionStorage.getItem("game-type");
-  document.querySelector("h1#title").innerHTML = `Cards ~ ${gametype}`;
+  document.querySelector("h1#title").innerHTML = `Cards: ${gametype}`;
 
   const displayname = window.localStorage.getItem("display-name");
   if (displayname)
@@ -26,6 +26,18 @@ window.onload = () => {
     updatedisplayname(displayname);
     document.querySelector('input[name="display-name"]').value = displayname;
   }
+}
+
+function resetlobby() {
+  selected = 'me';
+  document.querySelector("div.field.players").style.display = "block";
+  const name = window.localStorage.getItem("display-name")||"me";
+
+  const select = document.querySelector("select[name=player]");
+  select.innerHTML = `<option value="me">${name}</option>`
+
+  const list = document.querySelector("ul");
+  list.innerHTML = `<li data-id="me">${name}</li>`
 }
 
 function handleclick (e) {
@@ -90,10 +102,9 @@ function create(formdata) {
   settings.players = Number(formdata.get("players"));
   settings.online = formdata.get("online");
 
-  selected = 'me';
-
   window.sessionStorage.setItem("settings", JSON.stringify(settings));
-
+  resetlobby();
+  
   if (settings.online)
   {
     document.querySelector("div.field.players").style.display = "none";

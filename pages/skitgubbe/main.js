@@ -1,6 +1,6 @@
 import { Engine } from "engine";
 import { InputEvents } from "input-events";
-import { Pile } from "pile";
+import { Pile } from "card";
 import { Table } from "table";
 
 let engine, events, table;

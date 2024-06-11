@@ -4,19 +4,24 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Welcome 🃏</title>
-  <script src="pages/home/main.js" type="module"></script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+  <script type="importmap">
+    {
+      "imports": {
+        "utils": "./source/utils.js"
+      }
+    }
+  </script>
+
+  <script src="pages/home/main.js" type="module"></script>
   <link href="style.css" rel="stylesheet" />
 </head>
 <body class="menu">  
   <div>
     <h1>Welcome to cards</h1>
     <ul>
-      <li><a href="pages/skitgubbe/index.html">Skitgubbe</a></li>
-      <li><a href="pages/plain/index.html">Plain</a></li>
+      <li><a data-game-type="skitgubbe" href="/pages/skitgubbe/index.html">Skitgubbe</a></li>
+      <li><a data-game-type="plain" href="/pages/plain/index.html">Plain</a></li>
     </ul>
   </div>
 </body>
