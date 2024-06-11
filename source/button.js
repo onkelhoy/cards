@@ -25,6 +25,9 @@ export class Button extends EventTarget {
   handlemousedown = (e) => {
     if (isPointInRectangle(e.target.position, this))
     {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
       this.pressed = true;
       if (this.onpressdown) this.onpressdown();
     }
@@ -32,6 +35,9 @@ export class Button extends EventTarget {
   handlemouseup = (e) => {
     if (this.pressed)
     {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
       this.dispatchEvent(new Event("click"));
     }
     this.pressed = false;

@@ -2,7 +2,7 @@ import { Deck, Pile, Sprite } from "card";
 import { Hand } from "hand";
 import { Vector } from "vector";
 import { Button, EyeButton } from "button";
-import { getlink } from "link";
+import { getlink } from "utils";
 
 export class Table extends EventTarget {
   constructor(events, canvas, players = 2, decks = 1, piles = 1, online = false) {
@@ -85,47 +85,7 @@ export class Table extends EventTarget {
     this.deal(0);
     this.deal(0);
     this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
-    this.deal(0);
 
-    this.deal(1);
-    this.deal(1);
     this.deal(1);
     this.deal(1);
     this.deal(1);
@@ -166,6 +126,7 @@ export class Table extends EventTarget {
     let closestpiledistance = Number.MAX_SAFE_INTEGER;
     for (let pile of this.piles)
     {
+      if (pile.locked) continue;
       const distance = Vector.Distance(card.position, pile.position);
       if (distance < closestpiledistance)
       {

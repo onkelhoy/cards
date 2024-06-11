@@ -1,4 +1,5 @@
-import {Vector} from "vector";
+import { Vector } from "vector";
+import { logscreen } from "utils";
 
 const defaultInitSettings = {
   pointerlock: {
@@ -23,6 +24,7 @@ class Mouse extends EventTarget {
     this.lastpointerlock = performance.now() - 1000;
 
     this.clicked = false;
+    this.verbose = false;
     this.click = {
       start: null,
       end: null,
@@ -140,7 +142,7 @@ class Keyboard extends EventTarget {
     super();
 
     this.keys = {};
-
+    this.verbose = false;
     document.addEventListener("keydown", this.handlekeydown);
     document.addEventListener("keyup", this.handlekeyup);
   }
@@ -165,9 +167,14 @@ class Keyboard extends EventTarget {
       this.keys[name].start = performance.now();
     }
 
+    
     this.keys[name].clicked = true;
     this.keys[name].stop = null;
-
+    
+    if (this.verbose)
+    {
+      logscreen("keyup", name, this.keys[name]);
+    }
     // this.dispatchEvent(new CustomEvent('key', { detail: {
     //   name,
     //   value: this.keys[name]
@@ -187,9 +194,14 @@ class Keyboard extends EventTarget {
     {
       throw new Error("keyup event fired but no key registered: " + name);
     }
-
+    
     this.keys[name].clicked = false;
     this.keys[name].stop = performance.now();
+    
+    if (this.verbose)
+    {
+      logscreen("keyup", name, this.keys[name]);
+    }
 
     this.dispatchEvent(new CustomEvent(`${name}-up`, { detail: {
       name,
@@ -257,6 +269,7 @@ class Touches extends EventTarget {
 
     this.touches = {};
     this.changedTouches = [];
+    this.verbose = false;
     
     canvas.addEventListener("touchstart", this.handletouchstart);
     canvas.addEventListener("touchend",this. handletouchend);
@@ -282,9 +295,16 @@ class Touches extends EventTarget {
       this.movement.set(touch.movement);
     }
     
-    if (oldmouse !== this.mouse.id)
+    
+    const lastdown = oldmouse !== this.mouse.id;
+    if (lastdown)
     {
       this.dispatchEvent(new Event("last-down"));
+    }
+    
+    if (this.verbose)
+    {
+      logscreen("touch start", lastdown);
     }
     this.dispatchEvent(new Event("down"));
   }
@@ -306,6 +326,10 @@ class Touches extends EventTarget {
       }
     }
 
+    if (this.verbose)
+    {
+      logscreen("touch end");
+    }
     this.dispatchEvent(new Event("up"));
   }
   handletouchmove = (e) => {
@@ -374,6 +398,7 @@ export class InputEvents extends EventTarget {
     this.touch = new Touches(canvas);
     this.keyboard = new Keyboard();
     this.position = Vector.Zero;
+    this.verbose = !!this.config.verbose;
 
     this.mouse.on("down", this.handledown);
     this.mouse.on("up", this.handleup);
@@ -382,6 +407,12 @@ export class InputEvents extends EventTarget {
     this.touch.on("last-down", this.handledown);
     this.touch.on("last-up", this.handleup);
     this.touch.on("last-move", this.handlemove);
+  }
+
+  set verbose (value) {
+    this.mouse.verbose = value;
+    this.keyboard.verbose = value;
+    this.touch.verbose = value;
   }
 
   handledown = (e) => {

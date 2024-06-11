@@ -1,0 +1,91 @@
+<!DOCTYPE html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "utils": "../../source/utils.js"
+      }
+    }
+  </script>
+  <script src="main.js" type="module"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+  <link href="style.css" rel="stylesheet" />
+  <link href="../../style.css" rel="stylesheet" />
+</head>
+<body class="menu">  
+  <div>
+    <h1 id="title">Cards ~ xxx</h1>
+    <section class="selected" id="join-create">
+      <div class="flex">
+        <button data-value="join">JOIN GAME</button>
+        <button data-value="create">CREATE GAME</button>
+      </div>
+    </section>
+  
+    <section id="join">
+      <p>to be implemented</p>
+      <button data-value="back">Back</button>
+    </section>
+  
+    <section id="create">
+      <form id="create">
+        <div class="field">
+          <label for="players">Number of Players</label>
+          <input value="2" name="players" id="players" placeholder="Type number here" type="number" />
+        </div>
+
+        <div class="field">
+          <label for="decks">Number of Decks</label>
+          <input value="1" name="decks" id="decks" placeholder="Type number here" type="number" />
+        </div>
+
+        <div class="field">
+          <label for="online">Online</label>
+          <input name="online" id="online" type="checkbox" />
+        </div>
+
+        <div class="flex end">
+          <button data-value="back">Back</button>
+          <button type="submit" data-value="lobby">Create</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="lobby">
+      <div class="flex">
+        <div>
+          <h2>Players</h2>
+          <ul>
+            <li data-id="me">me</li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="field players">
+            <label for="player">Select Player</label>
+            <select name="player" id="player" value="1">
+              <option value="me">me</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="display-name">Display Name</label>
+            <input type="text" name="display-name" id="display-name" value="me" placeholder="Type your display name here" />
+          </div>
+        </div>
+      </div>
+      <div class="flex end">
+        <button data-value="back">Back</button>
+        <button data-value="start">Start Game</button>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

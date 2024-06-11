@@ -31,7 +31,7 @@ body.menu a {
   font-style: normal;
 }
 
-@media (prefers-color-scheme: light) {
+/* @media (prefers-color-scheme: light) {
   :root {
     --background: #eee;
   }
@@ -41,4 +41,4 @@ body.menu a {
   :root {
     --background: #000000;
   }
-}
+} */

@@ -175,6 +175,7 @@ export class Pile extends EventTarget {
       }
     });
     this.position = position;
+    this.locked = false;
     events.on("mouse-down", this.handlemousedown);
     events.on("mouse-up", this.handlemouseup);
   }

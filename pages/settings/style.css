@@ -1,0 +1,57 @@
+
+section {
+  padding: 3rem;
+  display: none;
+}
+
+section.selected {
+  display: block;
+}
+
+.flex {
+  display: flex;
+  gap: 0.5rem;
+}
+.flex.end {
+  justify-content: flex-end;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 12pt;
+  background: transparent;
+  border: 2px solid #c9c9c9;
+  border-radius: 3px;
+}
+button:hover {
+  background: #ddd;
+}
+button:active {
+  background: #ccc;
+}
+
+div.field {
+  margin-bottom: 1rem;
+}
+label {
+  font-size: 14pt;
+}
+select,
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 12pt;
+}
+input[type="checkbox"] {
+  scale: 1.4;
+}
+
+
+section#lobby > div {
+  gap: 2rem;
+}
+h2 {
+  margin-top: 0;
+}

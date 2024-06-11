@@ -1,0 +1,19 @@
+{
+  "name": "cards",
+  "version": "1.0.0",
+  "description": "Author: Henry Pap",
+  "main": "index.js",
+  "scripts": {
+    "start": "python3 -m http.server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onkelhoy/cards.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/onkelhoy/cards/issues"
+  },
+  "homepage": "https://github.com/onkelhoy/cards#readme"
+}
